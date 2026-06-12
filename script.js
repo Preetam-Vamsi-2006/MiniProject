@@ -48,7 +48,17 @@ function switchTab(tabName) {
         btn.classList.remove('active');
     });
     document.getElementById(tabName).classList.add('active');
-    event.target.classList.add('active');
+    
+    // Find and mark the clicked button as active
+    const clickedBtn = document.querySelector(`.nav-link[onclick*="${tabName}"]`);
+    if (clickedBtn) {
+        clickedBtn.classList.add('active');
+    }
+    
+    // Close menu on mobile
+    if (window.innerWidth <= 768) {
+        closeMenu();
+    }
 }
 
 function showLoading(elementId, show) {
@@ -276,84 +286,3 @@ async function getFeedback() {
         showAlert('interviewError', '❌ Error: ' + error.message);
     }
 }
-/* =========================
-   MOBILE HAMBURGER MENU
-========================= */
-
-function toggleMenu() {
-    const navTabs = document.getElementById("navTabs");
-    navTabs.classList.toggle("show");
-}
-
-/* =========================
-   IMPROVED TAB SWITCH
-========================= */
-
-function switchTab(tabName) {
-
-    document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-    });
-
-    document.querySelectorAll('.nav-tabs button').forEach(btn => {
-        btn.classList.remove('active');
-    });
-
-    document.getElementById(tabName).classList.add('active');
-
-    if (event) {
-        event.target.classList.add('active');
-    }
-
-    // Close menu on mobile after click
-    if (window.innerWidth <= 768) {
-        document.getElementById("navTabs")
-            .classList.remove("show");
-    }
-}
-
-/* =========================
-   3D FLOATING PARTICLES
-========================= */
-
-function createParticles() {
-
-    const container =
-        document.getElementById("particles");
-
-    for (let i = 0; i < 50; i++) {
-
-        const particle =
-            document.createElement("div");
-
-        particle.classList.add("particle");
-
-        const size =
-            Math.random() * 20 + 5;
-
-        particle.style.width =
-            size + "px";
-
-        particle.style.height =
-            size + "px";
-
-        particle.style.left =
-            Math.random() * 100 + "%";
-
-        particle.style.animationDuration =
-            (Math.random() * 15 + 10) + "s";
-
-        particle.style.animationDelay =
-            Math.random() * 10 + "s";
-
-        particle.style.opacity =
-            Math.random() * 0.8;
-
-        container.appendChild(particle);
-    }
-}
-
-window.addEventListener(
-    "load",
-    createParticles
-);
