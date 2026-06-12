@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Roadmap AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 3D Particle Background -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">🚀 CareerNova</div>
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <button class="nav-link" onclick="switchTab('roadmap'); closeMenu()">🎯 Roadmap</button>
+                <button class="nav-link" onclick="switchTab('resume'); closeMenu()">📄 Resume</button>
+                <button class="nav-link" onclick="switchTab('interview'); closeMenu()">🎤 Interview</button>
+                <button class="nav-link" onclick="switchTab('about'); closeMenu()">ℹ️ About</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>🚀 CareerNova AI</h1>
+            <p>Your Complete Career Development Platform</p>
+        </header>
+
+        <!-- Tab 1: Career Roadmap -->
+        <div id="roadmap" class="tab-content active">
+            <h2>🎯 Generate Your Career Roadmap</h2>
+            <div class="alert alert-success" id="roadmapSuccess"></div>
+            <div class="alert alert-error" id="roadmapError"></div>
+
+            <form id="roadmapForm" onsubmit="generateRoadmap(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="role">🎓 Select Target Role</label>
+                        <select id="role" required>
+                            <option value="">Choose a role...</option>
+                            <option value="Data Scientist">Data Scientist</option>
+                            <option value="AI Engineer">AI Engineer</option>
+                            <option value="DevOps Engineer">DevOps Engineer</option>
+                            <option value="Full Stack Python Developer">Full Stack Python Developer</option>
+                            <option value="Backend Developer">Backend Developer</option>
+                            <option value="Frontend Developer">Frontend Developer</option>
+                            <option value="Mobile Developer">Mobile Developer</option>
+                            <option value="Security Engineer">Security Engineer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="experience">📊 Current Experience Level</label>
+                        <select id="experience" required>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="timeline">⏱️ Learning Timeline (weeks)</label>
+                        <input type="text" id="timeline" value="12" placeholder="Enter weeks">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="learning">🎨 Learning Style</label>
+                        <select id="learning" required>
+                            <option value="mixed">Mixed</option>
+                            <option value="video-based">Video-based</option>
+                            <option value="reading">Reading</option>
+                            <option value="hands-on">Hands-on</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-3d">✨ Generate Roadmap</button>
+            </form>
+
+            <div class="loading" id="roadmapLoading">
+                <div class="spinner"></div>
+                <p>Generating your personalized roadmap...</p>
+            </div>
+
+            <div id="roadmapResult"></div>
+        </div>
+
+        <!-- Tab 2: Resume Analyzer -->
+        <div id="resume" class="tab-content">
+            <h2>📄 Resume Analyzer</h2>
+            <p style="margin-bottom: 20px;">Upload your resume (PDF or DOCX) and get AI-powered analysis</p>
+            <div class="alert alert-success" id="resumeSuccess"></div>
+            <div class="alert alert-error" id="resumeError"></div>
+
+            <form id="resumeForm" onsubmit="analyzeResume(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="resumeFile">📤 Upload Resume (PDF or DOCX)</label>
+                        <input type="file" id="resumeFile" accept=".pdf,.docx">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="jobRole">🎯 Target Job Role (Optional)</label>
+                        <select id="jobRole">
+                            <option value="">Any</option>
+                            <option value="Data Scientist">Data Scientist</option>
+                            <option value="Backend Developer">Backend Developer</option>
+                            <option value="Frontend Developer">Frontend Developer</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="resumeText">📝 Or paste your resume text</label>
+                    <textarea id="resumeText" placeholder="Paste your resume content..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-3d">🔍 Analyze Resume</button>
+            </form>
+
+            <div class="loading" id="resumeLoading">
+                <div class="spinner"></div>
+                <p>Analyzing your resume...</p>
+            </div>
+
+            <div id="resumeResult"></div>
+        </div>
+
+        <!-- Tab 3: Mock Interview -->
+        <div id="interview" class="tab-content">
+            <h2>🎤 Mock Interview Tool</h2>
+            <p style="margin-bottom: 20px;">Practice interview questions based on your resume and target role</p>
+            <div class="alert alert-success" id="interviewSuccess"></div>
+            <div class="alert alert-error" id="interviewError"></div>
+
+            <form id="interviewForm" onsubmit="generateInterview(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="interviewRole">🎯 Job Role</label>
+                        <select id="interviewRole" required>
+                            <option value="Data Scientist">Data Scientist</option>
+                            <option value="Backend Developer">Backend Developer</option>
+                            <option value="Frontend Developer">Frontend Developer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="difficulty">� Difficulty Level</label>
+                        <select id="difficulty" required>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="interviewResume">📤 Upload Resume</label>
+                    <input type="file" id="interviewResume" accept=".pdf,.docx">
+                </div>
+
+                <div class="form-group">
+                    <label for="interviewText">📝 Or paste your resume text</label>
+                    <textarea id="interviewText" placeholder="Paste your resume content..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-3d">🎬 Start Interview</button>
+            </form>
+
+            <div class="loading" id="interviewLoading">
+                <div class="spinner"></div>
+                <p>Generating interview questions...</p>
+            </div>
+
+            <div id="interviewResult"></div>
+
+            <div id="feedbackSection" style="display: none; margin-top: 30px;">
+                <h3>💬 Your Answer</h3>
+                <textarea id="userAnswer" placeholder="Type your answer here..." style="min-height: 120px;"></textarea>
+                <button type="button" class="btn-3d" onclick="getFeedback()" style="margin-top: 15px;">📝 Get Feedback</button>
+
+                <div class="loading" id="feedbackLoading">
+                    <div class="spinner"></div>
+                    <p>Analyzing your answer...</p>
+                </div>
+
+                <div id="feedbackResult"></div>
+            </div>
+        </div>
+
+        <!-- Tab 4: About -->
+        <div id="about" class="tab-content">
+            <h2>ℹ️ About Career Roadmap AI</h2>
+            <div class="about-section">
+                <div class="about-card">
+                    <h3>🎯 Career Roadmap</h3>
+                    <p>Generate personalized learning paths with customizable timelines and learning styles.</p>
+                </div>
+                <div class="about-card">
+                    <h3>📄 Resume Analyzer</h3>
+                    <p>Get AI-powered analysis with ATS scores and improvement recommendations.</p>
+                </div>
+                <div class="about-card">
+                    <h3>🎤 Mock Interview</h3>
+                    <p>Practice interviews with AI feedback and role-specific scenarios.</p>
+                </div>
+                <div class="about-card">
+                    <h3>🚀 Powered By</h3>
+                    <p>FastAPI Backend, Gemini 2.5 Flash AI, HTML/CSS/JavaScript Frontend</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="particle.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
