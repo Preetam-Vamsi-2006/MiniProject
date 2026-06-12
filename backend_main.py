@@ -241,14 +241,5 @@ async def resume_upload(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 # ==================== FOR PRODUCTION ====================
-# This block is not needed as Render will use the Uvicorn command
-# But kept for local testing
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.getenv("PORT", 8000))
-    uvicorn.run(
-        app,
-        host="0.0.0.0",
-        port=port,
-        log_level="info"
-    )
+# Removed if __name__ block for Render compatibility
+# Render will use: uvicorn backend_main:app --host 0.0.0.0 --port $PORT
