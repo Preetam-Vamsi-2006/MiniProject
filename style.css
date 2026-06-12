@@ -428,6 +428,30 @@ textarea {
     display: block;
 }
 
+/* Loading Spinner */
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
+}
+
+#roadmapLoading, #resumeLoading, #interviewLoading, #feedbackLoading {
+    display: none;
+    text-align: center;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+#roadmapLoading.show, #resumeLoading.show, #interviewLoading.show, #feedbackLoading.show {
+    display: block;
+}
+
 .alert-success {
     background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
     color: white;

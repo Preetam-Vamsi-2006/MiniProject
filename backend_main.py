@@ -81,21 +81,17 @@ def generate_roadmap(role: str, experience_level: str, timeline_weeks: int, lear
     """Generate roadmap using Gemini"""
     model = genai.GenerativeModel('gemini-2.5-flash')
     
-    prompt = f"""Create a detailed learning roadmap for someone wanting to become a {role}.
+    prompt = f"""Create a learning roadmap for {role} (Level: {experience_level}, Timeline: {timeline_weeks}w, Style: {learning_style}).
 
-User Details:
-- Experience Level: {experience_level}
-- Timeline: {timeline_weeks} weeks
-- Learning Style: {learning_style}
+Include:
+1. Prerequisites (2-3 items)
+2. Phase breakdown (3-4 phases max)
+3. Key skills per phase
+4. Resources for each phase
+5. Final projects
+6. Salary range
 
-Provide the roadmap in a clear, readable format. Include:
-1. Prerequisites
-2. Week-by-week topics with resources and projects
-3. Skills to gain at each stage
-4. Estimated salary range
-5. Key milestones
-
-Make it practical and actionable. Don't use JSON formatting - just present it in a clear, well-structured text format."""
+Be concise and actionable."""
     
     response = model.generate_content(prompt)
     return response.text
@@ -104,22 +100,19 @@ def analyze_resume(resume_text: str, job_role: str = ""):
     """Analyze resume using Gemini"""
     model = genai.GenerativeModel('gemini-2.5-flash')
     
-    job_context = f"for the {job_role} role" if job_role else ""
+    job_context = f"for {job_role}" if job_role else ""
     
-    prompt = f"""Analyze this resume {job_context} and provide a comprehensive evaluation:
+    prompt = f"""Quick resume analysis {job_context}:
 
 RESUME:
 {resume_text}
 
-Please provide:
-1. Overall Assessment (strengths and weaknesses)
-2. ATS Compatibility Score (0-100) and why
-3. Key Skills Identified
-4. Missing Skills or Experience
-5. Improvement Recommendations (specific and actionable)
-6. Interview Readiness Score (0-100)
-
-Format it in a clear, readable way. Be constructive and specific."""
+Provide (be concise):
+1. ATS Score (0-100)
+2. Top 5 Strengths
+3. Top 5 Gaps
+4. 3 Quick fixes
+5. Interview readiness (0-100)"""
     
     response = model.generate_content(prompt)
     return response.text
@@ -128,25 +121,16 @@ def generate_interview_questions(resume_text: str, job_role: str, difficulty: st
     """Generate interview questions based on resume and job role"""
     model = genai.GenerativeModel('gemini-2.5-flash')
     
-    difficulty_guidance = {
-        "Easy": "Basic questions about their experience and projects mentioned in the resume",
-        "Medium": "Questions that require explanation of technical skills and decision-making",
-        "Hard": "Challenging questions about complex scenarios, trade-offs, and deep technical knowledge"
-    }
-    
-    prompt = f"""Generate 5 interview questions for a {job_role} position at {difficulty} difficulty level.
+    prompt = f"""Generate 3 {difficulty.lower()} interview questions for {job_role} based on this resume:
 
-RESUME:
 {resume_text}
 
-Question Type: {difficulty_guidance[difficulty]}
+For each:
+1. Question
+2. Good answer (brief)
+3. 1 tip
 
-For each question:
-1. Ask a relevant question
-2. Provide what would be a good answer
-3. Provide tips for the candidate
-
-Format each question clearly. Don't use JSON. Make it conversational and helpful."""
+Keep it concise."""
     
     response = model.generate_content(prompt)
     return response.text
@@ -155,20 +139,17 @@ def get_feedback(answer: str):
     """Get feedback on interview answer"""
     model = genai.GenerativeModel('gemini-2.5-flash')
     
-    feedback_prompt = f"""Based on the interview answer provided, give constructive feedback:
+    prompt = f"""Quick feedback on this interview answer:
 
-CANDIDATE'S ANSWER:
+ANSWER:
 {answer}
 
-Provide:
-1. Strengths in the answer
-2. Areas for improvement
-3. Better way to answer
-4. Rating (out of 10)
-
-Be constructive and helpful."""
+Provide (concise):
+1. Strengths
+2. Improvements
+3. Rating (0-10)"""
     
-    response = model.generate_content(feedback_prompt)
+    response = model.generate_content(prompt)
     return response.text
 
 # ==================== API ENDPOINTS ====================

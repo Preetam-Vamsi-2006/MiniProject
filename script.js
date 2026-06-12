@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8000/api";
+const API_URL = "https://miniproject-3-u7zr.onrender.com/api";
 
 // Hamburger Menu Functionality
 function toggleMenu() {
@@ -55,6 +55,7 @@ function showLoading(elementId, show) {
     const element = document.getElementById(elementId);
     if (show) {
         element.classList.add('show');
+        element.innerHTML = '<div class="spinner"></div><p>⏳ Processing (10-20 seconds)...</p>';
     } else {
         element.classList.remove('show');
     }
