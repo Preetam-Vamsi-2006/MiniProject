@@ -23,11 +23,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Get API key from .env
+# Get API key from environment
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 if not GEMINI_API_KEY:
-    raise ValueError("GEMINI_API_KEY not found in .env file")
+    raise ValueError("GEMINI_API_KEY not found in environment variables")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
@@ -240,6 +240,15 @@ async def resume_upload(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# ==================== FOR PRODUCTION ====================
+# This block is not needed as Render will use the Uvicorn command
+# But kept for local testing
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=port,
+        log_level="info"
+    )
