@@ -7,4 +7,4 @@ python-docx
 python-multipart
 tiktoken
 crewai
-crewai-tools
+crewai[tools]
