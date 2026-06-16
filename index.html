@@ -13,13 +13,14 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">🚀 CareerNova</div>
+            <div class="logo" onclick="switchTab('home'); closeMenu()" style="cursor: pointer;">🚀 CareerNova</div>
             <div class="hamburger" onclick="toggleMenu()">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
             <div class="nav-menu" id="navMenu">
+                <button class="nav-link" onclick="switchTab('home'); closeMenu()">� Home</button>
                 <button class="nav-link" onclick="switchTab('roadmap'); closeMenu()">🎯 Roadmap</button>
                 <button class="nav-link" onclick="switchTab('resume'); closeMenu()">📄 Resume</button>
                 <button class="nav-link" onclick="switchTab('interview'); closeMenu()">🎤 Interview</button>
@@ -34,8 +35,40 @@
             <p>Your Complete Career Development Platform</p>
         </header>
 
+        <!-- Tab 0: Home -->
+        <div id="home" class="tab-content active">
+            <h2>Welcome to CareerNova AI</h2>
+            <p class="home-intro">Your complete career development platform. Choose a feature below to get started.</p>
+            
+            <div class="features-grid">
+                <!-- Feature 1: Career Roadmap -->
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Career Roadmap</h3>
+                    <p>Get a personalized learning roadmap tailored to your target role, experience level, and learning style. Week-by-week guidance with resources and projects.</p>
+                    <button class="btn-3d feature-btn" onclick="switchTab('roadmap')">Start Roadmap</button>
+                </div>
+
+                <!-- Feature 2: Resume Analyzer -->
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h3>Resume Analyzer</h3>
+                    <p>Upload your resume (PDF/DOCX) and get AI-powered analysis including ATS scores, skill matching, and actionable improvement recommendations.</p>
+                    <button class="btn-3d feature-btn" onclick="switchTab('resume')">Analyze Resume</button>
+                </div>
+
+                <!-- Feature 3: Mock Interview -->
+                <div class="feature-card">
+                    <div class="feature-icon">🎤</div>
+                    <h3>Mock Interview</h3>
+                    <p>Practice interviews with AI-generated questions based on your resume. Get feedback on your answers with ratings and improvement tips.</p>
+                    <button class="btn-3d feature-btn" onclick="switchTab('interview')">Start Interview</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Tab 1: Career Roadmap -->
-        <div id="roadmap" class="tab-content active">
+        <div id="roadmap" class="tab-content">
             <h2>🎯 Generate Your Career Roadmap</h2>
             <div class="alert alert-success" id="roadmapSuccess"></div>
             <div class="alert alert-error" id="roadmapError"></div>
