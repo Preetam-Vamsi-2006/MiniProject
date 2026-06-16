@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 import PyPDF2
 from docx import Document
 import io
-import asyncio
 from crewai import Agent, Task, Crew
 from crewai_tools import SerperDevTool
 
