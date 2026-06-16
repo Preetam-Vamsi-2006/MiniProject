@@ -161,10 +161,8 @@ Provide (concise):
 def get_learning_resources(topic: str):
     """Get learning resources using CrewAI and Serper"""
     try:
-        # Initialize Serper tool
         search_tool = SerperDevTool()
         
-        # Create research agent
         researcher = Agent(
             role='Research Analyst',
             goal='Find important resources such as links and tutorials.',
@@ -174,14 +172,12 @@ def get_learning_resources(topic: str):
             verbose=False
         )
         
-        # Create research task
         task = Task(
             description=f'Research about {topic} and provide resources such as YouTube links, tutorial links, or website links.',
             expected_output=f'Top resources for {topic}, only give working links',
             agent=researcher
         )
         
-        # Create and run crew
         crew = Crew(agents=[researcher], tasks=[task])
         result = crew.kickoff()
         
