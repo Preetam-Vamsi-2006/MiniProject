@@ -6,4 +6,4 @@ PyPDF2
 python-docx
 python-multipart
 crewai
-crewai-tools
+crewai[tools]
