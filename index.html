@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Roadmap AI</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <!-- 3D Particle Background -->
@@ -64,11 +65,19 @@
                     <p>Practice interviews with AI-generated questions based on your resume. Get feedback on your answers with ratings and improvement tips.</p>
                     <button class="btn-3d feature-btn" onclick="switchTab('interview')">Start Interview</button>
                 </div>
+
+                <!-- Feature 4: Learning Resources -->
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Learning Resources</h3>
+                    <p>Enter any topic and get a structured learning plan with key subtopics and estimated learning time for each. Perfect for planning your learning journey.</p>
+                    <button class="btn-3d feature-btn" onclick="switchTab('resources')">Explore Topics</button>
+                </div>
             </div>
         </div>
 
         <!-- Tab 1: Career Roadmap -->
-        <div id="roadmap" class="tab-content">
+        <div id="roadmap" class="tab-content"></div>
             <h2>🎯 Generate Your Career Roadmap</h2>
             <div class="alert alert-success" id="roadmapSuccess"></div>
             <div class="alert alert-error" id="roadmapError"></div>
@@ -231,7 +240,26 @@
             </div>
         </div>
 
-        <!-- Tab 4: About -->
+        <!-- Tab 4: Learning Resources -->
+        <div id="resources" class="tab-content">
+            <h2>📚 Learning Resources & Topic Planning</h2>
+            <div class="alert alert-success" id="resourcesSuccess"></div>
+            <div class="alert alert-error" id="resourcesError"></div>
+
+            <form id="resourcesForm" onsubmit="searchResources(event)">
+                <div class="form-group">
+                    <label for="resourceTopic">🔍 Enter Topic to Learn</label>
+                    <input type="text" id="resourceTopic" placeholder="e.g., Machine Learning, Web Development, Python, etc." required>
+                </div>
+
+                <button type="submit" class="btn-3d">Get Learning Plan</button>
+            </form>
+
+            <div id="resourcesLoading" class="loading"></div>
+            <div id="resourcesResult"></div>
+        </div>
+
+        <!-- Tab 5: About -->
         <div id="about" class="tab-content">
             <h2>ℹ️ About Career Roadmap AI</h2>
             <div class="about-section">

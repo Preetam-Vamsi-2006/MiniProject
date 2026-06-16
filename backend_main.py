@@ -7,8 +7,6 @@ from dotenv import load_dotenv
 import PyPDF2
 from docx import Document
 import io
-from crewai import Agent, Task, Crew
-from crewai_tools import SerperDevTool
 
 # Load environment variables
 load_dotenv()
@@ -27,7 +25,6 @@ app.add_middleware(
 
 # Get API key from environment
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 
 if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY not found in environment variables")
@@ -159,31 +156,22 @@ Provide (concise):
     return response.text
 
 def get_learning_resources(topic: str):
-    """Get learning resources using CrewAI and Serper"""
-    try:
-        search_tool = SerperDevTool()
-        
-        researcher = Agent(
-            role='Research Analyst',
-            goal='Find important resources such as links and tutorials.',
-            backstory='You are a fantastic research analyst who provides working resources for every topic',
-            llm='gemini-2.5-flash',
-            tools=[search_tool],
-            verbose=False
-        )
-        
-        task = Task(
-            description=f'Research about {topic} and provide resources such as YouTube links, tutorial links, or website links.',
-            expected_output=f'Top resources for {topic}, only give working links',
-            agent=researcher
-        )
-        
-        crew = Crew(agents=[researcher], tasks=[task])
-        result = crew.kickoff()
-        
-        return str(result)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error getting resources: {str(e)}")
+    """Get learning resources - subtopics with timeline using Gemini"""
+    model = genai.GenerativeModel('gemini-2.5-flash')
+    
+    prompt = f"""For the topic "{topic}", provide a structured learning plan.
+
+Format:
+1. List 5-7 key subtopics to learn
+2. For each subtopic, provide:
+   - Subtopic name
+   - Estimated learning time (in days/weeks)
+   - Brief description of what to learn
+
+Make it practical and actionable. No links needed, just subtopics with timelines."""
+    
+    response = model.generate_content(prompt)
+    return response.text
 
 # ==================== API ENDPOINTS ====================
 
@@ -263,5 +251,4 @@ async def resources_search(request: ResourceRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 # ==================== FOR PRODUCTION ====================
-# Removed if __name__ block for Render compatibility
 # Render will use: uvicorn backend_main:app --host 0.0.0.0 --port $PORT

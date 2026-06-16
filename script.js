@@ -89,10 +89,39 @@ function displayResult(elementId, data, role = '') {
     if (role) {
         const downloadBtn = document.createElement('button');
         downloadBtn.className = 'download-btn';
-        downloadBtn.textContent = '📥 Download as Text';
-        downloadBtn.onclick = () => downloadAsText(data, role);
+        downloadBtn.textContent = '📥 Download as PDF';
+        downloadBtn.onclick = () => downloadAsPDF(data, role);
         resultElement.appendChild(downloadBtn);
     }
+}
+
+function downloadAsPDF(data, role) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Set font and formatting
+    doc.setFontSize(16);
+    doc.text(`Career Roadmap - ${role}`, 10, 15);
+    
+    doc.setFontSize(11);
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 10;
+    const maxWidth = doc.internal.pageSize.getWidth() - 2 * margin;
+    
+    // Split text into lines that fit the page width
+    const lines = doc.splitTextToSize(data, maxWidth);
+    let yPosition = 25;
+    
+    lines.forEach((line) => {
+        if (yPosition > pageHeight - margin) {
+            doc.addPage();
+            yPosition = margin;
+        }
+        doc.text(line, margin, yPosition);
+        yPosition += 7;
+    });
+    
+    doc.save(`roadmap_${role.replace(/ /g, '_')}.pdf`);
 }
 
 function downloadAsText(data, role) {
@@ -284,5 +313,40 @@ async function getFeedback() {
     } catch (error) {
         showLoading('feedbackLoading', false);
         showAlert('interviewError', '❌ Error: ' + error.message);
+    }
+}
+
+async function searchResources(e) {
+    e.preventDefault();
+    const topic = document.getElementById('resourceTopic').value;
+
+    if (!topic) {
+        showAlert('resourcesError', '❌ Please enter a topic');
+        return;
+    }
+
+    showLoading('resourcesLoading', true);
+    hideAlerts('resources');
+
+    try {
+        const response = await fetch(`${API_URL}/resources/search`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                topic: topic
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to get resources');
+        const data = await response.json();
+
+        showLoading('resourcesLoading', false);
+        showAlert('resourcesSuccess', '✅ Learning plan generated!');
+        displayResult('resourcesResult', data.data);
+    } catch (error) {
+        showLoading('resourcesLoading', false);
+        showAlert('resourcesError', '❌ Error: ' + error.message);
     }
 }
