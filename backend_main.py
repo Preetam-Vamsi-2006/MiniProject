@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 import PyPDF2
 from docx import Document
 import io
+import asyncio
+from crewai import Agent, Task, Crew
+from crewai_tools import SerperDevTool
 
 # Load environment variables
 load_dotenv()
@@ -25,6 +28,7 @@ app.add_middleware(
 
 # Get API key from environment
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+SERPER_API_KEY = os.getenv("SERPER_API_KEY")
 
 if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY not found in environment variables")
@@ -50,6 +54,9 @@ class InterviewRequest(BaseModel):
 
 class FeedbackRequest(BaseModel):
     answer: str
+
+class ResourceRequest(BaseModel):
+    topic: str
 
 # ==================== UTILITY FUNCTIONS ====================
 
@@ -152,6 +159,37 @@ Provide (concise):
     response = model.generate_content(prompt)
     return response.text
 
+def get_learning_resources(topic: str):
+    """Get learning resources using CrewAI and Serper"""
+    try:
+        # Initialize Serper tool
+        search_tool = SerperDevTool()
+        
+        # Create research agent
+        researcher = Agent(
+            role='Research Analyst',
+            goal='Find important resources such as links and tutorials.',
+            backstory='You are a fantastic research analyst who provides working resources for every topic',
+            llm='gemini-2.5-flash',
+            tools=[search_tool],
+            verbose=False
+        )
+        
+        # Create research task
+        task = Task(
+            description=f'Research about {topic} and provide resources such as YouTube links, tutorial links, or website links.',
+            expected_output=f'Top resources for {topic}, only give working links',
+            agent=researcher
+        )
+        
+        # Create and run crew
+        crew = Crew(agents=[researcher], tasks=[task])
+        result = crew.kickoff()
+        
+        return str(result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error getting resources: {str(e)}")
+
 # ==================== API ENDPOINTS ====================
 
 @app.get("/")
@@ -218,6 +256,14 @@ async def resume_upload(file: UploadFile = File(...)):
         return {"success": True, "data": text}
     except HTTPException:
         raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/resources/search")
+async def resources_search(request: ResourceRequest):
+    try:
+        resources = get_learning_resources(request.topic)
+        return {"success": True, "data": resources}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
